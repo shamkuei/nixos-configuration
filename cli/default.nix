@@ -25,20 +25,20 @@ in {
   environment.variables.ANTHROPIC_DEFAULT_SONNET_MODEL = "glm-4.6";
   environment.variables.ANTHROPIC_DEFAULT_OPUS_MODEL = "glm-4.6";
 
-  home-manager.users.ehsan.programs.taskwarrior.enable = true;
+  home-manager.users.aliz.programs.taskwarrior.enable = true;
 
-  home-manager.users.ehsan.programs.zoxide.enable = true;
-  home-manager.users.ehsan.programs.zoxide.enableZshIntegration = true;
+  home-manager.users.aliz.programs.zoxide.enable = true;
+  home-manager.users.aliz.programs.zoxide.enableZshIntegration = true;
   environment.shellAliases.z = "zoxide";
 
-  home-manager.users.ehsan.programs.taskwarrior.package = pkgs.taskwarrior3;
-  home-manager.users.ehsan.programs.taskwarrior.config = {
+  home-manager.users.aliz.programs.taskwarrior.package = pkgs.taskwarrior3;
+  home-manager.users.aliz.programs.taskwarrior.config = {
     sync.encryption_secret = secrets.taskwarrior-secret;
     sync.server.client_id = "aa529e36-0e93-4d5a-90e4-921f942aa0d7";
     sync.server.origin = "http://localhost:8443";
   };
 
-  home-manager.users.ehsan.home.file.timewarrior-hook = {
+  home-manager.users.aliz.home.file.timewarrior-hook = {
     executable = true;
     source = "${pkgs.timewarrior}/share/doc/timew/ext/on-modify.timewarrior";
     target = ".local/share/task/hooks/on-modify.timewarrior";
@@ -97,7 +97,7 @@ in {
     # (urls "claude" "https://claude.ai/")
 
   ];
-  home-manager.users.ehsan.home.file.zshrc = {
+  home-manager.users.aliz.home.file.zshrc = {
     text = ''
       task
     '';

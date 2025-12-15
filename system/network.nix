@@ -43,7 +43,7 @@ in {
   };
   programs.nekoray.enable = true;
   programs.nekoray.tunMode.enable = true;
-  home-manager.users.ehsan.home.file.nekorayRouting = {
+  home-manager.users.aliz.home.file.nekorayRouting = {
     target = ".config/nekoray/config/routes/Default";
     text = builtins.toJSON {
       block_domain = "geosite:category-ads-all";

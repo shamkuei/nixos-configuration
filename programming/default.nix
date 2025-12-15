@@ -3,12 +3,12 @@ let aider-ce = unstable.callPackage ./aider-ce/package.nix { };
 in {
   imports = [ ./editors.nix ./virtualisation.nix ];
   # git 
-  home-manager.users.ehsan = {
+  home-manager.users.aliz = {
     programs = {
       git = {
         enable = true;
-        userName = "ehsan";
-        userEmail = "ehsan2003.2003.382@gmail.com";
+        userName = "aliz";
+        userEmail = "aliz2003.2003.382@gmail.com";
         extraConfig = { init = { defaultBranch = "main"; }; };
       };
     };
@@ -29,7 +29,7 @@ in {
     postgresql_16
     lazygit
     typescript
-
+    vscode
     unstable.claude-code
     unstable.aider-chat # aider-ce
     unstable.vlang
@@ -45,7 +45,7 @@ in {
     ])
     pre-commit
   ];
-  home-manager.users.ehsan.home.file.claude-settinngs = {
+  home-manager.users.aliz.home.file.claude-settinngs = {
     text = builtins.toJSON {
       env = {
         ANTHROPIC_DEFAULT_HAIKU_MODEL = "glm-4.5-air";

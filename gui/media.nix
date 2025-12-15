@@ -11,6 +11,7 @@
     ffmpeg
     vlc
     popcorntime
+    obs-studio
   ];
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;

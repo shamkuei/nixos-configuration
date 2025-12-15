@@ -1,6 +1,6 @@
 { secrets, ... }: {
-  users.users.ehsan = {
-    hashedPassword = secrets.HASHED_PASSWORD; # ehsan
+  users.users.aliz = {
+    hashedPassword = secrets.HASHED_PASSWORD; # aliz
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
   };

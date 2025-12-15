@@ -4,7 +4,7 @@ let
     || config.networking.hostName == "nixos-old-laptop");
 in {
   fonts.packages = with pkgs; [ font-awesome ];
-  home-manager.users.ehsan.programs.i3status-rust = {
+  home-manager.users.aliz.programs.i3status-rust = {
     package = unstable.i3status-rust;
     enable = true;
     bars = {
