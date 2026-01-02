@@ -123,7 +123,7 @@ in {
       ];
     };
     services.proxy = {
-      enable = true;
+      enable = false;
       description = "main proxy for system";
       after = [ "network.target" ];
       serviceConfig = {

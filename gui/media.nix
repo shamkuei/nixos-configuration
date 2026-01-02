@@ -12,6 +12,8 @@
     vlc
     popcorntime
     obs-studio
+    google-chrome
+    mpv
   ];
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
