@@ -1,4 +1,4 @@
-{ pkgs, nixvim, unstable, ... }@inputs:
+{ config, pkgs, nixvim, unstable, ... }@inputs:
 let
   system = "x86_64-linux";
   nixvim' = nixvim.legacyPackages.${system};
@@ -6,15 +6,19 @@ let
     pkgs = unstable;
     module = import ./nixvim;
   };
+  userName = config.userConfiguration.name;
+  userFullName = config.userConfiguration.fullName;
+  userEmail = config.userConfiguration.email;
 in {
   environment.systemPackages = [ pkgs.neovide pkgs.glrnvim nvim ];
-  home-manager.users.aliz = {
+
+  home-manager.users.${userName} = {
     programs = {
       git = {
         enable = true;
-        userName = "aliz";
-        userEmail = "aliz2003.2003.382@gmail.com";
-        extraConfig = { init = { defaultBranch = "main"; }; };
+        settings.user.name = userFullName;
+        settings.user.email = userEmail;
+        settings.init = { defaultBranch = "main"; };
       };
     };
   };

@@ -1,5 +1,9 @@
-{ pkgs, ... }: {
-  home-manager.users.aliz.programs.firefox = {
+
+{ config, pkgs, ... }:
+let
+  userName = config.userConfiguration.name;
+in {
+  home-manager.users.${userName}.programs.firefox = {
     enable = true;
     package = pkgs.wrapFirefox pkgs.firefox-bin-unwrapped {
       extraPolicies = {

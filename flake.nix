@@ -4,7 +4,7 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -18,7 +18,7 @@
     nur.url = "github:nix-community/NUR";
     nix-alien.url = "github:thiagokokada/nix-alien";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -36,14 +36,9 @@
         module = import ./programming/nixvim;
       };
       system = "x86_64-linux";
-      installing = builtins.getEnv "INSTALLING" == "1";
-      secrets-file =
-        if installing then /mnt/etc/secrets.nix else /etc/secrets.nix;
+      secrets-file = ./vars/secrets.ehsan.nix;
       secrets = import secrets-file;
-      hardware-configuration = (if installing then
-        /mnt/etc/nixos/hardware-configuration.nix
-      else
-        /etc/nixos/hardware-configuration.nix);
+      hardware-configuration = ./vars/hardware-configuration.nix;
       system-definer = (secrets: hw:
         let
           specialArgs = inputs // {
@@ -51,41 +46,44 @@
               inherit system;
               config.allowUnfree = true;
             };
-            inherit hardware-configuration;
-            inherit secrets;
-
+            hardware-configuration = hw;
+          };
+          # Module to inject secrets into config.userConfiguration.secrets
+          secretsModule = { config, ... }: {
+            config.userConfiguration.secrets = secrets;
           };
         in {
           base = {
             inherit specialArgs system;
-            modules = [ ./hosts/base.nix ];
+            modules = [ secretsModule ./hosts/base.nix ];
           };
-          nixos-old-laptop = {
+
+          nixos-new-laptop = {
             inherit specialArgs system;
-            modules = [ ./hosts/old-laptop.nix ];
+            modules = [ secretsModule ./hosts/new-laptop.nix ];
           };
 
           nixos-laptop = {
             inherit specialArgs system;
-            modules = [ ./hosts/laptop.nix ];
+            modules = [ secretsModule ./hosts/laptop.nix ];
           };
           nixos-home-desktop = {
             inherit specialArgs system;
-            modules = [ ./hosts/home-pc.nix ];
+            modules = [ secretsModule ./hosts/home-pc.nix ];
           };
 
           tablet = {
             inherit specialArgs system;
-            modules = [ ./hosts/tablet.nix ];
+            modules = [ secretsModule ./hosts/tablet.nix ];
           };
 
           usb = {
             inherit specialArgs system;
-            modules = [ ./hosts/usb.nix ];
+            modules = [ secretsModule ./hosts/usb.nix ];
           };
           iso = {
             inherit specialArgs system;
-            modules = [ ./hosts/iso.nix ];
+            modules = [ secretsModule ./hosts/iso.nix ];
           };
         });
     in {
