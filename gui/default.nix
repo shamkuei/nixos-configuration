@@ -22,7 +22,7 @@
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
 
-  home-manager.users.ehsan = {
+  home-manager.users.aliz = {
     gtk = {
       enable = true;
       theme = {
@@ -75,5 +75,6 @@
 
     xarchiver
     unstable.telegram-desktop
+    unstable.lutris
   ];
 }

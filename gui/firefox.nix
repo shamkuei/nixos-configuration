@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  home-manager.users.ehsan.programs.firefox = {
+  home-manager.users.aliz.programs.firefox = {
     enable = true;
     package = pkgs.wrapFirefox pkgs.firefox-bin-unwrapped {
       extraPolicies = {

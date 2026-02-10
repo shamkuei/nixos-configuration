@@ -6,7 +6,7 @@
   virtualisation.docker.daemon.settings.data-root = "/var/lib/d22";
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
-  home-manager.users.ehsan = {
+  home-manager.users.aliz = {
     dconf.settings = {
       "org/virt-manager/virt-manager/connections" = {
         autoconnect = [ "qemu:///system" ];
@@ -14,6 +14,6 @@
       };
     };
   };
-  users.users.ehsan.extraGroups = [ "libvirtd" ];
+  users.users.aliz.extraGroups = [ "libvirtd" ];
 
 }

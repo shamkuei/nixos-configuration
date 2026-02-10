@@ -9,7 +9,7 @@
     target = "secrets.nix";
   };
 
-  home-manager.users.ehsan.home.file.nixos-configuration = {
+  home-manager.users.aliz.home.file.nixos-configuration = {
     source = ../.;
     target = "nixos-configuration";
   };

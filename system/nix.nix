@@ -1,5 +1,5 @@
 { nur, pkgs, ... }: {
-  home-manager.users.ehsan = {
+  home-manager.users.aliz = {
     nixpkgs.overlays = [ (self: super: { fcitx-engines = pkgs.fcitx5; }) ];
     home.stateVersion = "22.11";
   };

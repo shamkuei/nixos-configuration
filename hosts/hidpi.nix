@@ -1,7 +1,7 @@
 { pkgs,... }:
 let dpi = 250;
 in {
-  home-manager.users.ehsan.home.pointerCursor = {
+  home-manager.users.aliz.home.pointerCursor = {
     x11.enable = true;
     package = pkgs.vanilla-dmz;
     name = "Vanilla-DMZ";
@@ -9,7 +9,7 @@ in {
   };
 
   services.xserver.dpi = dpi;
-  home-manager.users.ehsan.programs.rofi.extraConfig."dpi" = dpi;
+  home-manager.users.aliz.programs.rofi.extraConfig."dpi" = dpi;
   console.font = pkgs.lib.mkForce "Lat2-Terminus32";
   environment.variables = {
     GDK_SCALE = "2";

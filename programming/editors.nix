@@ -8,12 +8,12 @@ let
   };
 in {
   environment.systemPackages = [ pkgs.neovide pkgs.glrnvim nvim ];
-  home-manager.users.ehsan = {
+  home-manager.users.aliz = {
     programs = {
       git = {
         enable = true;
-        userName = "ehsan";
-        userEmail = "ehsan2003.2003.382@gmail.com";
+        userName = "aliz";
+        userEmail = "aliz2003.2003.382@gmail.com";
         extraConfig = { init = { defaultBranch = "main"; }; };
       };
     };
