@@ -1,5 +1,19 @@
+<<<<<<< HEAD
 { nur, pkgs, ... }: {
   home-manager.users.aliz = {
+=======
+{
+  config,
+  nur,
+  pkgs,
+  ...
+}:
+let
+  userName = config.userConfiguration.name;
+in
+{
+  home-manager.users.${userName} = {
+>>>>>>> e9d13699f687568b4028085082e95ee25e0a06dc
     nixpkgs.overlays = [ (self: super: { fcitx-engines = pkgs.fcitx5; }) ];
     home.stateVersion = "22.11";
   };

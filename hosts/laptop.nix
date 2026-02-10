@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 { pkgs, config, ... }:
 let dpi = 120;
 in {
@@ -10,6 +11,15 @@ in {
       Xft.dpi: ${toString dpi}  
     EOF
   '';
+=======
+{ pkgs, ... }:
+let
+  dpi = 120;
+in
+{
+  imports = [ ./base.nix ];
+  networking.hostName = "nixos-laptop"; # Define your hostname.
+>>>>>>> e9d13699f687568b4028085082e95ee25e0a06dc
 
   # # Load nvidia driver for Xorg and Wayland
   # services.xserver.videoDrivers = [ "nvidia" ];
@@ -46,4 +56,12 @@ in {
   # };
 
   services.tlp.enable = true;
+  services.tlp.settings = {
+    CPU_SCALING_GOVERNOR_ON_AC = "performance";
+    CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+    CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+  };
 }

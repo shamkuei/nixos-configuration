@@ -1,21 +1,51 @@
-{ pkgs, unstable, secrets, ... }:
+{
+  config,
+  pkgs,
+  unstable,
+  ...
+}:
 let
-  proxyFile = pkgs.writeShellScriptBin "start-proxy" secrets.proxy;
+  secrets = config.userConfiguration.secrets;
+  proxies = secrets.proxies;
+  defaultProxy = secrets.defaultProxy;
   awg-config = pkgs.writeTextFile {
     name = "awg-config";
     text = secrets.awg-config;
     destination = "/awg.conf";
   };
-in {
+  proxiesDir = pkgs.symlinkJoin {
+    name = "proxies";
+    paths = pkgs.lib.mapAttrsToList (
+      name: value: pkgs.writeShellScriptBin "proxy-${name}" value
+    ) proxies;
+  };
+  slipstream = (pkgs.callPackage ./slipstream.nix { });
+  paqet = (pkgs.callPackage ./paqet.nix { });
+  chproxy = pkgs.writeShellScriptBin "chproxy" ''
+    if [ -z "$1" ]; then
+      echo "Usage: chproxy <proxy-name>"
+      echo "Available proxies: ${pkgs.lib.concatStringsSep " " (pkgs.lib.attrNames proxies)}"
+      exit 1
+    fi
+    if [ ! -e "${proxiesDir}/bin/proxy-$1" ]; then
+      echo "Error: Proxy '$1' not found"
+      echo "Available proxies: ${pkgs.lib.concatStringsSep " " (pkgs.lib.attrNames proxies)}"
+      exit 1
+    fi
+    echo "$1" > /etc/current-proxy;
+    sudo systemctl restart proxy.service;
+  '';
+in
+{
   imports = [ ];
   networking.nameservers = [ "1.1.1.1" ];
   networking.networkmanager.enable = true;
-  # networking.firewall.checkReversePath = "loose"; 
+  # networking.firewall.checkReversePath = "loose";
   services.expressvpn.enable = true;
   services.openvpn.servers = {
     openvpn = {
       autoStart = false;
-      config = secrets.openvpn;
+      config = config.userConfiguration.secrets.openvpn;
       updateResolvConf = true;
     };
   };
@@ -41,6 +71,7 @@ in {
     client.enable = true;
     torsocks.enable = true;
   };
+<<<<<<< HEAD
   programs.nekoray.enable = true;
   programs.nekoray.tunMode.enable = true;
   home-manager.users.aliz.home.file.nekorayRouting = {
@@ -63,20 +94,29 @@ in {
       use_dns_object = false;
     };
   };
+=======
+  programs.throne.enable = true;
+  programs.throne.tunMode.enable = true;
+>>>>>>> e9d13699f687568b4028085082e95ee25e0a06dc
 
   environment.systemPackages = [
+    slipstream
+    paqet
     pkgs.xray
     pkgs.v2ray
+    unstable.tor-browser
     unstable.sing-box
     unstable.v2raya
     unstable.tun2socks
-    unstable.nekoray
+    unstable.throne
     unstable.amnezia-vpn
     unstable.amneziawg-go
     unstable.amneziawg-tools
+    unstable.tor
     pkgs.expressvpn
-
+    chproxy
   ];
+  services.snowflake-proxy.enable = true;
   services.dbus.packages = [ unstable.amnezia-vpn ];
 
   systemd = {
@@ -87,32 +127,48 @@ in {
       description = "amnezia vpn service (awg-quick)";
       after = [ "network.target" ];
 
-      serviceConfig = let awg-quick = "${pkgs.amneziawg-tools}/bin/awg-quick";
-      in {
-        User = "root"; # Already correct - root has necessary permissions
-        Type = "oneshot";
-        RemainAfterExit = true;
+      serviceConfig =
+        let
+          awg-quick = "${pkgs.amneziawg-tools}/bin/awg-quick";
+        in
+        {
+          User = "root"; # Already correct - root has necessary permissions
+          Type = "oneshot";
+          RemainAfterExit = true;
 
-        # Add necessary capabilities
-        AmbientCapabilities =
-          [ "CAP_NET_ADMIN" "CAP_NET_BIND_SERVICE" "CAP_NET_RAW" ];
-        CapabilityBoundingSet =
-          [ "CAP_NET_ADMIN" "CAP_NET_BIND_SERVICE" "CAP_NET_RAW" ];
+          # Add necessary capabilities
+          AmbientCapabilities = [
+            "CAP_NET_ADMIN"
+            "CAP_NET_BIND_SERVICE"
+            "CAP_NET_RAW"
+          ];
+          CapabilityBoundingSet = [
+            "CAP_NET_ADMIN"
+            "CAP_NET_BIND_SERVICE"
+            "CAP_NET_RAW"
+          ];
 
-        # Allow network configuration
-        PrivateNetwork = false;
+          # Allow network configuration
+          PrivateNetwork = false;
 
-        # Ensure it can modify system network settings
-        RestrictAddressFamilies =
-          [ "AF_NETLINK" "AF_INET" "AF_INET6" "AF_UNIX" ];
+          # Ensure it can modify system network settings
+          RestrictAddressFamilies = [
+            "AF_NETLINK"
+            "AF_INET"
+            "AF_INET6"
+            "AF_UNIX"
+          ];
 
-        # Allow the service to interact with systemd-resolved if needed
-        SystemCallFilter = [ "@network-io" "@system-service" ];
+          # Allow the service to interact with systemd-resolved if needed
+          SystemCallFilter = [
+            "@network-io"
+            "@system-service"
+          ];
 
-        # Original commands
-        ExecStart = [ "${awg-quick} up ${awg-config}/awg.conf" ];
-        ExecStop = [ "${awg-quick} down ${awg-config}/awg.conf" ];
-      };
+          # Original commands
+          ExecStart = [ "${awg-quick} up ${awg-config}/awg.conf" ];
+          ExecStop = [ "${awg-quick} down ${awg-config}/awg.conf" ];
+        };
 
       # Expand path to include all needed tools
       path = [
@@ -128,9 +184,22 @@ in {
       after = [ "network.target" ];
       serviceConfig = {
         Restart = "always";
-        ExecStart = "${proxyFile}/bin/start-proxy";
+        ExecStart = pkgs.writeShellScript "proxy-start" ''
+          if [ -f /etc/current-proxy ]; then
+            name=$(cat /etc/current-proxy)
+          else
+            name="${defaultProxy}"
+          fi
+          exec "${proxiesDir}/bin/proxy-$name"
+        '';
       };
-      path = [ unstable.xray unstable.sing-box unstable.v2raya ];
+      path = [
+        slipstream
+        unstable.xray
+        unstable.sing-box
+        unstable.v2raya
+        paqet
+      ];
       wantedBy = [ "multi-user.target" ];
     };
   };

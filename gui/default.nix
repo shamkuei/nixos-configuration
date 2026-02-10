@@ -1,5 +1,41 @@
-{ pkgs, unstable, ... }: {
-  imports = [ ./i3status-rust.nix ./firefox.nix ./media.nix ];
+{
+  pkgs,
+  config,
+  unstable,
+  ...
+}:
+let
+  userName = config.userConfiguration.name;
+in
+{
+  imports = [
+    ./waybar.nix
+    ./rofi.nix
+    ./firefox.nix
+    ./media.nix
+  ];
+
+  xdg.portal = {
+    enable = true;
+
+    config = {
+      preferred = {
+        default = "wlroots";
+      };
+    };
+    wlr.enable = true;
+    # Add the WLR backend for Hyprland/Wayland
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk # Recommended for GTK file dialogs
+    ];
+
+    # Tells GTK apps to use the portal instead of native dialogs
+  };
+
+  # Mask xdg-desktop-portal-gtk.service to prevent it from interfering with wlr portal
+  systemd.user.services.xdg-desktop-portal-gtk.enable = false;
+
   fonts.packages = with pkgs; [
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.nerd-fonts.fira-code
@@ -11,18 +47,40 @@
     useXkbConfig = true; # use xkbOptions in tty.
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
-  services.xserver.windowManager.i3.enable = true; # Configure keymap in X11
-  services.xserver.xkb.layout = "us,ir";
-  services.xserver.xkb.options = "eurosign:e,caps:escape, grp:shifts_toggle";
+  # Enable Hyprland (Wayland)
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
+  # Display manager
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    enableHidpi = true;
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
+  services.libinput.touchpad.disableWhileTyping = true;
 
+<<<<<<< HEAD
   home-manager.users.aliz = {
+=======
+  home-manager.users.${userName} = {
+
+    services.flameshot.enable = true;
+    services.flameshot.settings = {
+      General = {
+        useGrimAdapter = true;
+      };
+    };
+    home.pointerCursor = {
+      package = pkgs.vanilla-dmz;
+      name = "Vanilla-DMZ";
+      size = 72;
+    };
+>>>>>>> e9d13699f687568b4028085082e95ee25e0a06dc
     gtk = {
       enable = true;
       theme = {
@@ -30,7 +88,16 @@
         package = pkgs.materia-theme;
       };
     };
-    home.file.i3Config = import ./i3-config.nix { pkgs = pkgs; };
+    home.file.".config/hypr/hyprland.conf".text =
+      (import ./hyprland-config.nix {
+        pkgs = pkgs;
+        config = config;
+      }).text;
+    home.file.".config/hypr/hyprpaper.conf".text = ''
+      preload = ~/.background-image
+      wallpaper = eDP-1,~/.background-image
+      wallpaper = HDMI-A-1,~/.background-image
+    '';
     home.file.aiderConfig = {
       target = ".config/aichat/config.yaml";
       text = ''
@@ -47,34 +114,65 @@
     };
     services.dunst.enable = true;
     programs = {
-      rofi = {
+      wofi = {
         enable = true;
-        theme = "Adapta-Nokto";
       };
-      alacritty = { enable = true; };
+      alacritty = {
+        enable = true;
+      };
     };
 
   };
-  services.redshift.enable = true;
+  # services.gammastep.enable = true;
   environment.systemPackages = with pkgs; [
     alacritty
     # Window manager and utils
-    rofi
-    xorg.xmodmap
+    wofi
     libnotify
     dunst
     translate-shell
-    xsel
-    dmenu
-    rofi
-    flameshot
+    wl-clipboard
+    grim
+    swappy
     i3status
-    pasystray
     scrcpy
     libreoffice
 
     xarchiver
     unstable.telegram-desktop
+<<<<<<< HEAD
     unstable.lutris
+=======
+    # Hyprland packages
+    hyprland
+    hyprlandPlugins.hyprgrass
+    hyprlandPlugins.hyprbars
+    hyprlandPlugins.hyprexpo
+
+    hyprpaper
+    # Common Wayland packages
+    waybar
+    libinput
+    lisgd
+    rofi
+    fcitx5
+    arc-icon-theme
+    xdg-desktop-portal
+    xdg-desktop-portal-wlr
+    wvkbd
+    pavucontrol
+
+>>>>>>> e9d13699f687568b4028085082e95ee25e0a06dc
   ];
+  programs.thunar.enable = true;
+  services.xserver.desktopManager.runXdgAutostartIfNone = true;
+  i18n.inputMethod = {
+    type = "fcitx5";
+    enable = true;
+    fcitx5.waylandFrontend = true;
+    fcitx5.addons = with pkgs; [
+      fcitx5-mozc
+      fcitx5-gtk
+    ];
+  };
 }

@@ -1,4 +1,5 @@
-{ pkgs, fenix, ... }: {
+{ pkgs, fenix, ... }:
+{
   imports = [
     ./lsp.nix
     ./telescope.nix
@@ -9,7 +10,7 @@
     ./ui.nix
     ./comment.nix
     ./treesitter.nix
-    ./ai.nix
+    ./agentic.nix
   ];
   config = {
     plugins.yanky.enable = true;

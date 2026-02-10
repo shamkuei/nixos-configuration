@@ -1,8 +1,9 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   config = {
     colorschemes.tokyonight.enable = true;
     globals.mapleader = " ";
-    clipboard.providers.xclip.enable = true;
+    clipboard.providers.wl-copy.enable = true;
     clipboard.register = "unnamedplus";
     opts.shiftwidth = 2; # Tab width should be 2
     opts.expandtab = true; # Tab width should be 2
