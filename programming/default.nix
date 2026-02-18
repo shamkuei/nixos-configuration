@@ -131,6 +131,8 @@ in
     unstable.aider-chat # aider-ce
     unstable.vlang
     unstable.lazysql
+    unstable.sqlit-tui
+    lazydocker
 
     uv
     cargo-watch
