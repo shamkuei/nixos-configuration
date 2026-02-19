@@ -10,7 +10,7 @@ let
   urls = (import ./uri-short.nix pkgs);
   secrets = config.userConfiguration.secrets;
   alert = (import ./alert.nix pkgs) secrets;
-  pgbkp = pkgs.callPackage ./pgbkp/default.nix {postgresql = pkgs.postgresql_16 ;};
+  pgbkp = pkgs.callPackage ./pgbkp/default.nix { postgresql = pkgs.postgresql_16; };
   userName = config.userConfiguration.name;
 in
 {
@@ -68,6 +68,7 @@ in
       vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       openssl
       llm-agents.claude-code-acp
+      (pkgs.writeShellScriptBin "claude-code-acp" "${llm-agents.claude-code-acp}/bin/claude-agent-acp")
       llm-agents.claude-plugins
       llm-agents.skills-installer
 

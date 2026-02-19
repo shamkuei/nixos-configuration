@@ -7,8 +7,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "carlos-algms";
           repo = "agentic.nvim";
-          rev = "e84e505837afc36358b950e4941ed8fc59bfdbe4";
-          hash = "sha256-q9DBNJ8L9T0y6PeR9NyL45ZRI1Sl8UvlWzANswKNPl4=";
+          rev = "53dcb741bcfe7ffcc4f8d6b282659d5bedbf08c0";
+          hash = "sha256-ZJ4VQgaunGTAuzV2uCGtGQbg92Efoe3b0PT2mVbDa+o=";
         };
         doCheck = false;
       })

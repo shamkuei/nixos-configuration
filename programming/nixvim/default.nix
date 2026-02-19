@@ -11,6 +11,7 @@
     ./comment.nix
     ./treesitter.nix
     ./agentic.nix
+    # ./codecompanion.nix
   ];
   config = {
     plugins.yanky.enable = true;
