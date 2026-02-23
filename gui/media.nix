@@ -11,6 +11,7 @@
     mkvtoolnix
     ffmpeg
     vlc
+    mpv
     popcorntime
   ];
   hardware.bluetooth.enable = true;

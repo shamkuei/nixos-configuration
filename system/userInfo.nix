@@ -19,21 +19,21 @@ in
 
     name = lib.mkOption {
       type = lib.types.str;
-      default = "ehsan";
+      default = "aliz";
       description = "Username for the primary user account.";
       example = "alice";
     };
 
     fullName = lib.mkOption {
       type = lib.types.str;
-      default = "Ehsan";
+      default = "Alireza";
       description = "Full name for git and other applications.";
       example = "Alice Johnson";
     };
 
     email = lib.mkOption {
       type = lib.types.str;
-      default = "ehsan2003.2003.382@gmail.com";
+      default = "shamkoooei@gmail.com";
       description = "Email address for git and other applications.";
       example = "alice@example.com";
     };

@@ -21,6 +21,7 @@ in
     pkgs.neovide
     pkgs.glrnvim
     nvim
+    pkgs.vscode
   ];
   home-manager.users.${userName} = {
     programs = {
