@@ -9,7 +9,6 @@ let
     config.networking.hostName == "nixos-laptop" || config.networking.hostName == "nixos-new-laptop"
   );
   userName = config.userConfiguration.name;
-  enablePraytimes = config.userConfiguration.enablePraytimes;
 
   baseModulesLaptop = [
     "hyprland/window"
@@ -40,8 +39,6 @@ let
     "clock"
     "tray"
   ];
-
-  prayerModule = [ "custom/prayer-times" ];
 in
 {
   home-manager.users.${userName} = {
@@ -63,9 +60,9 @@ in
           "modules-center" = [ ];
           "modules-right" = (
             if is-laptop then
-              baseModulesLaptop ++ (lib.optionals enablePraytimes prayerModule) ++ endModules
+              baseModulesLaptop ++ endModules
             else
-              baseModulesDesktop ++ (lib.optionals enablePraytimes prayerModule) ++ endModules
+              baseModulesDesktop ++ endModules
           );
           "hyprland/workspaces" = {
             disable-scroll = false;
@@ -202,12 +199,6 @@ in
           "custom/keyboard" = {
             exec = "${pkgs.xkb-switch}/bin/xkb-switch";
             interval = 1;
-          };
-        })
-        // (lib.optionalAttrs enablePraytimes {
-          "custom/prayer-times" = {
-            exec = "${pkgs.praytimes-kit}/bin/praytimes-kit next --config ${pkgs.praytimes-config}/etc/praytimes/praytimes.json";
-            interval = 10;
           };
         })
         // {

@@ -73,8 +73,6 @@ flake.nix                      # Central orchestrator, defines all systems
 │       ├── telescope.nix     # Fuzzy finder
 │       ├── ai.nix            # Avante AI assistant
 │       └── ...
-│
-└── praytimes/                # Islamic prayer times service
 ```
 
 ### Flake Special Arguments
@@ -95,8 +93,7 @@ flake.nix → nixosConfigurations
                 ├── system/default.nix
                 ├── gui/default.nix
                 ├── cli/default.nix
-                ├── programming/default.nix
-                └── praytimes/default.nix
+                └── programming/default.nix
 ```
 
 ## Secrets Management
@@ -114,7 +111,7 @@ Required keys:
 | `defaultProxy` | Default proxy name |
 | `OPENAI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY` | AI API keys |
 | `OPENAI_API_HOST` | API host override |
-| `location` | `{latitude, longitude}` for praytimes/redshift |
+| `location` | `{latitude, longitude}` for redshift |
 | `taskwarrior-secret` | Task sync encryption |
 | `NOTIFIER_BOT_TOKEN`, `CHAT_ID` | Telegram notifications |
 | `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` | Custom Anthropic proxy (z.ai) |

@@ -4,7 +4,6 @@
     ./programming
     ./gui
     ./cli
-    ./praytimes
     ./system
     home-manager.nixosModules.default
   ];

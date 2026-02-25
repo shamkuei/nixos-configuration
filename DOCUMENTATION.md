@@ -1,6 +1,6 @@
 # NixOS Configuration - Complete Documentation
 
-A comprehensive, modular NixOS configuration managing multiple systems with emphasis on privacy, AI-assisted development, Wayland desktop, and Islamic prayer times.
+A comprehensive, modular NixOS configuration managing multiple systems with emphasis on privacy, AI-assisted development, and Wayland desktop.
 
 ---
 
@@ -14,12 +14,11 @@ A comprehensive, modular NixOS configuration managing multiple systems with emph
 6. [CLI Modules](#cli-modules)
 7. [Programming Environment](#programming-environment)
 8. [Nixvim Configuration](#nixvim-configuration)
-9. [Prayer Times Service](#prayer-times-service)
-10. [Flake Architecture](#flake-architecture)
-11. [Secrets Management](#secrets-management)
-12. [Build Commands](#build-commands)
-13. [Custom Applications](#custom-applications)
-14. [Key Features](#key-features)
+9. [Flake Architecture](#flake-architecture)
+10. [Secrets Management](#secrets-management)
+11. [Build Commands](#build-commands)
+12. [Custom Applications](#custom-applications)
+13. [Key Features](#key-features)
 
 ---
 
@@ -32,7 +31,6 @@ This is a flake-based NixOS configuration that manages multiple machines from a 
 - **Wayland-first** - Hyprland compositor with full touch gesture support
 - **AI-integrated** - Claude Code, Agentic.nvim, aider-chat, and multiple MCP servers
 - **Privacy-focused** - Multiple VPN options, covert DNS tunneling, proxy management
-- **Islamic integration** - Prayer times with adhan, Taskwarrior integration, Waybar display
 
 ---
 
@@ -116,10 +114,6 @@ nixos-configuration/
 │       ├── comment.nix         # Comment plugin
 │       └── treesitter.nix      # Treesitter config
 │
-├── praytimes/                  # Islamic prayer times service
-│   ├── default.nix             # Praytimes service configuration
-│   └── adhan.mp3               # Adhan audio file
-│
 └── vars/                       # Gitignored variables
     ├── hardware-configuration.nix  # Hardware-specific config
     └── secrets.ehsan.nix          # User secrets (gitignored)
@@ -185,7 +179,7 @@ Defines the comprehensive user configuration schema. All options are accessible 
 | `defaultProxy` | Default proxy name |
 | `OPENAI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY` | AI API keys |
 | `OPENAI_API_HOST` | API host override |
-| `location` | `{latitude, longitude}` for praytimes/redshift |
+| `location` | `{latitude, longitude}` for redshift |
 | `taskwarrior-secret` | Task sync encryption |
 | `NOTIFIER_BOT_TOKEN`, `CHAT_ID` | Telegram notifications |
 | `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL` | Custom Anthropic proxy |
@@ -530,42 +524,7 @@ Incremental selection with:
 
 ---
 
-## Prayer Times Service
-
-### Module: `praytimes/default.nix`
-
-Islamic prayer times integration with:
-
-**praytimes-kit:**
-- Custom-built from Rust source
-- Calculates prayer times based on location (from secrets)
-
-**Systemd User Service:**
-- Runs in background
-- Triggers notifications at prayer times
-
-**Adhan Playback:**
-- Dhuhr and Maghrib - Full adhan
-- Fajr, Asr, Isha - Notification only
-
-**Taskwarrior Integration:**
-- Creates task: "Pray [prayer name]"
-- Due at prayer time
-- Auto-deletes after prayer
-
-**Waybar Integration:**
-- Shows next prayer name and time
-- Custom module for display
-
-**Additional Notifications:**
-- Sunset notification
-- Midnight (Islamic) notification
-
-**Aliases:**
-- `pt` - Show all prayer times
-- `pn` - Show next prayer only
-
----
+## Flake Architecture
 
 ## Flake Architecture
 
@@ -746,8 +705,6 @@ Created via `cli/uri-short.nix`:
 | Alias | Command |
 |-------|---------|
 | `nv` | `neovide --fork` |
-| `pt` | `praytimes-kit calculate` |
-| `pn` | `praytimes-kit next` |
 
 ---
 
@@ -784,14 +741,7 @@ Centralized proxy switching with `chproxy` command:
 - **Aider** - AI pair programmer
 - Multiple LLM backends (OpenAI, Groq, OpenRouter, Anthropic)
 
-### 6. Islamic Integration
-
-- Prayer times with adhan notifications
-- Taskwarrior integration for prayer reminders
-- Waybar display of next prayer
-- Sunset and midnight notifications
-
-### 7. Wayland-Native Desktop
+### 6. Wayland-Native Desktop
 
 - Hyprland compositor with full touch gesture support
 - Hyprexpo for workspace overview
@@ -849,7 +799,6 @@ flake.nix
                 │   ├── editors.nix
                 │   ├── virtualisation.nix
                 │   └── nixvim/*
-                └── praytimes/default.nix
 ```
 
 ---
@@ -880,8 +829,8 @@ home-manager.users.${userName} = {
 ### Conditional Configuration
 
 ```nix
-lib.mkIf enablePraytimes { ... }
-lib.optionals enablePraytimes prayerModule
+lib.mkIf enableFeature { ... }
+lib.optionals enableFeature someModule
 lib.mkForce false  # Override options
 ```
 

@@ -60,12 +60,6 @@ in
       description = "Enable the Persian keyboard layout.";
     };
 
-    enablePraytimes = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable praytimes service and waybar integration.";
-    };
-
     # Secrets storage - imported from vars/secrets.<username>.nix and injected via flake.nix
     secrets = lib.mkOption {
       type = lib.types.submoduleWith {
@@ -82,23 +76,23 @@ in
                   example = "$y$j9T$...";
                 };
 
-                # Location for praytimes/redshift
+                # Location for redshift
                 location = lib.mkOption {
                   type = lib.types.submodule {
                     options = {
                       latitude = lib.mkOption {
                         type = lib.types.float;
-                        description = "Latitude coordinate for praytimes/redshift.";
+                        description = "Latitude coordinate for redshift.";
                         example = 60;
                       };
                       longitude = lib.mkOption {
                         type = lib.types.float;
-                        description = "Longitude coordinate for praytimes/redshift.";
+                        description = "Longitude coordinate for redshift.";
                         example = 70;
                       };
                     };
                   };
-                  description = "Geographic location for praytimes and redshift.";
+                  description = "Geographic location for redshift.";
                 };
 
                 # Taskwarrior sync
